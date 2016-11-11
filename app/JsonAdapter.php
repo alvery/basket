@@ -2,16 +2,18 @@
 
 namespace App;
 
-class StorageAdapter
+class JsonAdapter implements StorageAdapterInterface
 {
     /**
      * @var array
      */
     private $data = [];
 
-    public function __construct(array $data)
+    public function __construct(string $path)
     {
-        $this->data = $data;
+        $data = file_get_contents($path);
+        $this->data = json_decode($data, true);
+        var_dump($this->data);
     }
 
     /**
@@ -19,7 +21,7 @@ class StorageAdapter
      *
      * @return array|null
      */
-    public function find(int $id)
+    public function find($id)
     {
         if (isset($this->data[$id])) {
             return $this->data[$id];

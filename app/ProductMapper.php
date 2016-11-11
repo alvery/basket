@@ -1,21 +1,22 @@
 <?php
 
 
-namespace app;
+namespace App;
 
 use App\Entity\Product;
 
 class ProductMapper
 {
     /**
-     * @var StorageAdapter
+     * @var StorageAdapterInterface
      */
     private $adapter;
 
     /**
-     * @param StorageAdapter $storage
+     * ProductMapper constructor.
+     * @param StorageAdapterInterface $storage
      */
-    public function __construct(StorageAdapter $storage)
+    public function __construct(StorageAdapterInterface $storage)
     {
         $this->adapter = $storage;
     }
