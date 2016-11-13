@@ -17,13 +17,15 @@ class Product
         // validate state before accessing keys!
 
         return new self(
+            $state['id'],
             $state['name'],
             $state['price'],
             $state['description']
         );
     }
 
-    public function __construct($name, $price, $description = '') {
+    public function __construct($id, $name, $price, $description = '') {
+        $this->id = $id;
         $this->name = $name;
         $this->price = $price;
         $this->description = $description;

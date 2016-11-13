@@ -2,18 +2,24 @@
 
 namespace App;
 
-class JsonAdapter implements StorageAdapterInterface
+class CookieAdapter implements StorageAdapterInterface
 {
     /**
      * @var array
      */
     private $data = [];
 
-    public function __construct(string $path)
+    public function __construct(string $cookieName)
     {
-        $data = file_get_contents($path);
-        $this->data = json_decode($data, true);
-        var_dump($this->data);
+        if (isset($_COOKIE[$cookieName]))
+        {
+            $this->data = json_decode($_COOKIE[$cookieName]);
+        }
+        else
+        {
+            $this->data = [];
+        }
+
     }
 
     /**
@@ -27,6 +33,7 @@ class JsonAdapter implements StorageAdapterInterface
 
         return null;
     }
+
 
     /**
      * @inheritdoc

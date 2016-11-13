@@ -11,10 +11,18 @@ namespace app;
 
 interface StorageAdapterInterface
 {
+
     /**
+     * Find item
      * @param $id
      * @return mixed
      */
     public function find($id);
+
+    /**
+     * Return all items
+     * @return mixed
+     */
+    public function all();
 
 }

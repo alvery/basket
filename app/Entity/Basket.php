@@ -2,14 +2,22 @@
 
 namespace App\Entity;
 
+use App\ProductMapper;
+use app\StorageAdapterInterface;
+
 class Basket
 {
+    protected $productMapper;
     protected $items;
 
 
-    public function __construct()
+    public function __construct(StorageAdapterInterface $cookieItems, ProductMapper $product)
     {
+        $this->productMapper = $product;
 
+        foreach($cookieItems->all() as $itemId){
+            $this->items[] = $this->productMapper->findById($itemId);
+        }
     }
 
     public function add(Product $item)
@@ -27,7 +35,7 @@ class Basket
     public function getTotalSum() {
         $total = 0;
         foreach ($this->items as $item) {
-            $total += $item->getPrice();
+            $total += $item->price;
         }
         return $total;
     }
