@@ -11,24 +11,51 @@ use App\JsonAdapter;
 use App\CookieAdapter;
 use App\Router;
 
+/**
+ * Get all items from JSON file OR CSV
+ */
+$storage = new JsonAdapter(__DIR__.'/../storage/data.json');
+
+/**
+ * Init product mapper
+ */
+$productMapper = new ProductMapper($storage);
+
+/**
+ * Get all items in basket
+ */
+$basketData = new CookieAdapter('basket');
+$basket = new Basket($basketData, $productMapper);
+
+/**
+ * Init api controller
+ */
 $controller = new App\Controllers\ApiController();
 
-Router::route('/api/products/', function() use($controller){
-    $controller->products();
+
+/**
+ * Register api routes
+ */
+
+// GET /api/products
+Router::route('/api/products/', function() use($controller, $productMapper){
+    $controller->products($productMapper);
 });
 
-// DELETE api/cart/{product_id}
-Router::route('/api/cart/(\d+)', function($product_id){
+// POST api/cart
+Router::route('/api/cart/add/(\d+)/', function($product_id) use($controller){
+    $controller->addItem($product_id);
+});
 
+// DELETE api/cart
+Router::route('/api/cart/delete/(\d+)/', function($product_id) use($controller){
+    $controller->removeItem($product_id);
+});
+
+// GET api/cart
+Router::route('/api/cart/', function() use($controller){
+    $controller->cart();
 });
 
 
 Router::execute($_SERVER['REQUEST_URI']);
-
-// Get all items in store
-$storage = new JsonAdapter(__DIR__.'/../storage/data.json');
-$productMapper = new ProductMapper($storage);
-
-// Init basket from cookies
-$basketData = new CookieAdapter('basket');
-$basket = new Basket($basketData, $productMapper);

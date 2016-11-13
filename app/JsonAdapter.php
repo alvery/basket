@@ -11,9 +11,11 @@ class JsonAdapter implements StorageAdapterInterface
 
     public function __construct(string $path)
     {
-        $data = file_get_contents($path);
-        $this->data = json_decode($data, true);
-        var_dump($this->data);
+        $data = json_decode(file_get_contents($path), true);
+
+        foreach($data['items'] as $item){
+            $this->data[$item['id']] = $item;
+        }
     }
 
     /**

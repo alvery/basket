@@ -21,17 +21,13 @@ class ProductMapper
         $this->adapter = $storage;
     }
 
+
     /**
-     * finds a user from storage based on ID and returns a User object located
-     * in memory. Normally this kind of logic will be implemented using the Repository pattern.
-     * However the important part is in mapRowToUser() below, that will create a business object from the
-     * data fetched from storage
-     *
+     * Finds product with id
      * @param int $id
-     *
      * @return Product
      */
-    public function findById(int $id): Product
+    public function findById(int $id)
     {
         $result = $this->adapter->find($id);
 
@@ -39,10 +35,47 @@ class ProductMapper
             throw new \InvalidArgumentException("Product #$id not found");
         }
 
-        return $this->mapRowToUser($result);
+        return $this->mapToEntity($result);
     }
 
-    private function mapRowToUser(array $row): Product
+
+    /**
+     * Get all products
+     * @return mixed
+     */
+    public function getAll(){
+
+        $items = [];
+        foreach($this->adapter->all() as $item){
+            $items[] = $this->mapToEntity($item);
+        }
+
+        return $items;
+    }
+
+
+    public function getAllJSON(){
+
+        $items = [];
+        foreach($this->getAll() as $item){
+            $items[] = [
+                'id' => $item->id,
+                'name' => $item->name,
+                'price' => $item->price,
+                'description' => $item->description
+            ];
+        }
+
+        return json_encode($items);
+    }
+
+
+    /**
+     * Map data to entity
+     * @param array $row
+     * @return Product
+     */
+    private function mapToEntity(array $row)
     {
         return Product::fromState($row);
     }
