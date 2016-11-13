@@ -38,22 +38,22 @@ $controller = new App\Controllers\ApiController();
  */
 
 // GET /api/products
-Router::route('/api/products/', function() use($controller, $productMapper){
+Router::route('/api/products', function() use($controller, $productMapper){
     $controller->products($productMapper);
 });
 
-// POST api/cart
-Router::route('/api/cart/add/(\d+)/', function($product_id) use($controller, $basket, $productMapper){
+// GET api/cart/add/{product_id}
+Router::route('/api/cart/add/(\d+)', function($product_id) use($controller, $basket, $productMapper){
     $controller->addItem($product_id, $basket, $productMapper);
 });
 
-// DELETE api/cart
-Router::route('/api/cart/delete/(\d+)/', function($product_id) use($controller, $basket){
+// GET api/cart/delete/{product_id}
+Router::route('/api/cart/delete/(\d+)', function($product_id) use($controller, $basket){
     $controller->removeItem($product_id, $basket);
 });
 
 // GET api/cart
-Router::route('/api/cart/', function() use($controller, $basket){
+Router::route('/api/cart', function() use($controller, $basket){
     $controller->cart($basket);
 });
 
