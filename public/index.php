@@ -24,7 +24,7 @@ $productMapper = new ProductMapper($storage);
 /**
  * Get all items in basket
  */
-$basketData = new CookieAdapter('basket');
+$basketData = new CookieAdapter('cart');
 $basket = new Basket($basketData, $productMapper);
 
 /**
@@ -43,18 +43,18 @@ Router::route('/api/products/', function() use($controller, $productMapper){
 });
 
 // POST api/cart
-Router::route('/api/cart/add/(\d+)/', function($product_id) use($controller){
-    $controller->addItem($product_id);
+Router::route('/api/cart/add/(\d+)/', function($product_id) use($controller, $basket, $productMapper){
+    $controller->addItem($product_id, $basket, $productMapper);
 });
 
 // DELETE api/cart
-Router::route('/api/cart/delete/(\d+)/', function($product_id) use($controller){
-    $controller->removeItem($product_id);
+Router::route('/api/cart/delete/(\d+)/', function($product_id) use($controller, $basket){
+    $controller->removeItem($product_id, $basket);
 });
 
 // GET api/cart
-Router::route('/api/cart/', function() use($controller){
-    $controller->cart();
+Router::route('/api/cart/', function() use($controller, $basket){
+    $controller->cart($basket);
 });
 
 

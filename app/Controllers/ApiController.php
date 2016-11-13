@@ -5,8 +5,6 @@ namespace App\Controllers;
 
 use App\Entity\Basket;
 use App\ProductMapper;
-use App\JsonAdapter;
-use app\StorageAdapterInterface;
 
 class ApiController extends Controller
 {
@@ -21,21 +19,26 @@ class ApiController extends Controller
         echo $productMapper->getAllJSON();
     }
 
-    public function cart(){
+    public function cart(Basket $basket){
 
-        // Init basket from cookies
-//        $basketData = new CookieAdapter('basket');
-//        $basket = new Basket($basketData, $productMapper);
-        
+        $items = $basket->getItems();
+
+        echo json_encode([
+            'data' => [
+                'total_sum' => $basket->getTotalSum(),
+                'products_count' => count($items),
+                'products' => $basket->getItemsArray(),
+            ]
+        ]);
     }
 
-    public function addItem($product_id){
-        echo $product_id;
+    public function addItem($product_id, Basket $basket, ProductMapper $productMapper){
+        $product = $productMapper->findById($product_id);
+        $basket->add($product);
     }
 
-    public function removeItem($product_id){
-
-
+    public function removeItem($product_id, Basket $basket){
+        $basket->remove($product_id);
     }
 
 
